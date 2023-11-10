@@ -4,6 +4,8 @@ import com.quick.recording.gateway.dto.company.CompanyDto;
 import com.quick.recording.gateway.dto.user.UserDto;
 import com.quick.recording.gateway.service.company.CompanyController;
 import com.quick.recording.gateway.service.user.UserController;
+import com.quick.recording.resource.service.anatation.CurrentUser;
+import com.quick.recording.resource.service.security.QROAuth2AuthenticatedPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,8 @@ public class CompanyControllerImpl implements CompanyController {
     @Autowired
     private UserController userController;
 
-    @Override
-    @GetMapping({"/"})
-    public ResponseEntity<CompanyDto> getCompany() {
+    @GetMapping("/jopa")
+    public ResponseEntity<CompanyDto> getCompany1(@CurrentUser QROAuth2AuthenticatedPrincipal user) {
         CompanyDto companyDto = new CompanyDto();
         companyDto.setName("Рога копыта");
         companyDto.setUuid(UUID.randomUUID());
@@ -33,8 +34,18 @@ public class CompanyControllerImpl implements CompanyController {
     }
 
     @Override
-    @GetMapping({"/list"})
-    public ResponseEntity<List<CompanyDto>> getCompanyList() {
+    public ResponseEntity<CompanyDto> getCompany(@CurrentUser QROAuth2AuthenticatedPrincipal user) {
+        CompanyDto companyDto = new CompanyDto();
+        companyDto.setName("Рога копыта");
+        companyDto.setUuid(UUID.randomUUID());
+        companyDto.setUsers(userController.usersByCompany(companyDto.getUuid().toString()).getBody());
+        ResponseEntity<UserDto> currentUser = userController.getCurrentUser();
+        companyDto.getUsers().add(currentUser.getBody());
+        return ResponseEntity.ok(companyDto);
+    }
+
+    @Override
+    public ResponseEntity<List<CompanyDto>> getCompanyList(@CurrentUser QROAuth2AuthenticatedPrincipal user) {
         CompanyDto companyDto1 = new CompanyDto();
         companyDto1.setName("Рога копыта");
         companyDto1.setUuid(UUID.randomUUID());
