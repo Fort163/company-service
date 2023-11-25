@@ -7,7 +7,6 @@ spring:
         opaquetoken:
           client-id: 'test-client'
           client-secret: 'test-client'
-          username: 'company'
           custom-auth: true
   main:
     allow-bean-definition-overriding: true
@@ -19,3 +18,5 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+gateway:
+  logger: true
