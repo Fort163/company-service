@@ -18,7 +18,6 @@ import java.util.UUID;
 @RequestMapping("/company")
 public class CompanyControllerImpl implements CompanyController {
 
-
     private final UserController userController;
 
     @Override
