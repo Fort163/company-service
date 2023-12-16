@@ -4,15 +4,13 @@ import com.quick.recording.company.service.service.ActivityService;
 import com.quick.recording.gateway.dto.company.ActivityDto;
 import com.quick.recording.gateway.dto.company.SearchActivityDto;
 import com.quick.recording.gateway.service.company.CompanyServiceActivityApi;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -37,7 +35,7 @@ public class ActivityControllerImpl implements CompanyServiceActivityApi {
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_WRITE')")
-    public ResponseEntity<ActivityDto> post(@RequestBody @Valid ActivityDto activityDto) {
+    public ResponseEntity<ActivityDto> post(@RequestBody @Validated ActivityDto activityDto) {
         return ResponseEntity.ok(activityService.post(activityDto));
     }
 
@@ -49,7 +47,7 @@ public class ActivityControllerImpl implements CompanyServiceActivityApi {
 
     @Override
     @PreAuthorize("hasAnyAuthority('ROLE_WRITE')")
-    public ResponseEntity<ActivityDto> put(@RequestBody @Valid ActivityDto user) {
+    public ResponseEntity<ActivityDto> put(@RequestBody @Validated ActivityDto user) {
         return ResponseEntity.ok(activityService.put(user));
     }
 
