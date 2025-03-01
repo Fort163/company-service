@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ActivityServiceImpl implements ActivityService{
+public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepository activityRepository;
     private final ActivityMapper activityMapper;
@@ -27,37 +27,37 @@ public class ActivityServiceImpl implements ActivityService{
     public ActivityDto byUuid(UUID uuid) {
         Assert.notNull(uuid, "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(uuid).orElseThrow(() -> new NotFoundException(ActivityEntity.class, uuid));
-        return activityMapper.toActivityDto(activityEntity);
+        return activityMapper.toDto(activityEntity);
     }
 
     @Override
     public Page<ActivityDto> list(SearchActivityDto searchActivityDto, Pageable pageable) {
         List<ActivityEntity> list = activityRepository.searchActivity(searchActivityDto, pageable);
-        long count = activityRepository.searchUserCount(searchActivityDto);
-        List<ActivityDto> result = activityMapper.toActivityDtoList(list);
+        long count = activityRepository.searchActivityCount(searchActivityDto);
+        List<ActivityDto> result = activityMapper.toDtoList(list);
         return new PageImpl<ActivityDto>(result, pageable, count);
     }
 
     @Override
     public ActivityDto post(ActivityDto activityDto) {
-        ActivityEntity activityEntity = activityMapper.toActivityEntity(activityDto);
-        return activityMapper.toActivityDto(activityRepository.save(activityEntity));
+        ActivityEntity activityEntity = activityMapper.toEntity(activityDto);
+        return activityMapper.toDto(activityRepository.save(activityEntity));
     }
 
     @Override
     public ActivityDto patch(ActivityDto activity) {
         Assert.notNull(activity.getUuid(), "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(activity.getUuid()).orElseThrow(() -> new NotFoundException(ActivityEntity.class, activity.getUuid()));
-        activityEntity = activityMapper.toActivityEntityWithNull(activity,activityEntity);
-        return activityMapper.toActivityDto(activityRepository.save(activityEntity));
+        activityEntity = activityMapper.toEntityWithoutNull(activity,activityEntity);
+        return activityMapper.toDto(activityRepository.save(activityEntity));
     }
 
     @Override
     public ActivityDto put(ActivityDto activity) {
         Assert.notNull(activity.getUuid(), "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(activity.getUuid()).orElseThrow(() -> new NotFoundException(ActivityEntity.class, activity.getUuid()));
-        activityEntity = activityMapper.toActivityEntity(activity,activityEntity);
-        return activityMapper.toActivityDto(activityRepository.save(activityEntity));
+        activityEntity = activityMapper.toEntity(activity,activityEntity);
+        return activityMapper.toDto(activityRepository.save(activityEntity));
     }
 
     @Override
