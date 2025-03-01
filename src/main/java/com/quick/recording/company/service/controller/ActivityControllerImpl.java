@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/activity")
+@RequestMapping("/api/v1/activity")
 public class ActivityControllerImpl implements CompanyServiceActivityApi {
 
     private final ActivityService activityService;
