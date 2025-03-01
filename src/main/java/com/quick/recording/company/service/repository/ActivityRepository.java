@@ -26,6 +26,6 @@ public interface ActivityRepository extends JpaRepository<ActivityEntity, UUID>,
             "WHERE (UPPER(activity.name) LIKE UPPER(:#{'%' + #search.name + '%'}) OR :#{#search.name} IS NULL) " +
             " AND (UPPER(activity.description) LIKE UPPER(:#{'%' + #search.description + '%'}) OR :#{#search.description} IS NULL) " +
             " AND (activity.isActive =:#{#search.isActive} OR :#{#search.isActive} IS NULL ) ")
-    long searchUserCount(@Param("search") SearchActivityDto search);
+    long searchActivityCount(@Param("search") SearchActivityDto search);
 
 }
