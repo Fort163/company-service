@@ -13,4 +13,12 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
         <sqlFile path="db/changelog/script/create-schema-activity.sql"/>
     </changeSet>
 
+    <changeSet id="2" author="Fort163">
+        <sqlFile path="db/changelog/script/create-schema-company.sql"/>
+    </changeSet>
+
+    <changeSet id="3" author="Fort163">
+        <sqlFile path="db/changelog/script/create-schema-geoposition.sql"/>
+    </changeSet>
+
 </databaseChangeLog>
