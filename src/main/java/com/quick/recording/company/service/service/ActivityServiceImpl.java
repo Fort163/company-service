@@ -6,6 +6,7 @@ import com.quick.recording.company.service.repository.ActivityRepository;
 import com.quick.recording.gateway.config.error.exeption.NotFoundException;
 import com.quick.recording.gateway.dto.company.ActivityDto;
 import com.quick.recording.gateway.dto.company.SearchActivityDto;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +25,7 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityMapper activityMapper;
 
     @Override
+    @CircuitBreaker(name = "database")
     public ActivityDto byUuid(UUID uuid) {
         Assert.notNull(uuid, "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(uuid).orElseThrow(() -> new NotFoundException(ActivityEntity.class, uuid));
@@ -31,6 +33,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @CircuitBreaker(name = "database")
     public Page<ActivityDto> list(SearchActivityDto searchActivityDto, Pageable pageable) {
         List<ActivityEntity> list = activityRepository.searchActivity(searchActivityDto, pageable);
         long count = activityRepository.searchActivityCount(searchActivityDto);
@@ -39,12 +42,14 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @CircuitBreaker(name = "database")
     public ActivityDto post(ActivityDto activityDto) {
         ActivityEntity activityEntity = activityMapper.toEntity(activityDto);
         return activityMapper.toDto(activityRepository.save(activityEntity));
     }
 
     @Override
+    @CircuitBreaker(name = "database")
     public ActivityDto patch(ActivityDto activity) {
         Assert.notNull(activity.getUuid(), "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(activity.getUuid()).orElseThrow(() -> new NotFoundException(ActivityEntity.class, activity.getUuid()));
@@ -53,6 +58,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @CircuitBreaker(name = "database")
     public ActivityDto put(ActivityDto activity) {
         Assert.notNull(activity.getUuid(), "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(activity.getUuid()).orElseThrow(() -> new NotFoundException(ActivityEntity.class, activity.getUuid()));
@@ -61,6 +67,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @CircuitBreaker(name = "database")
     public Boolean delete(UUID uuid) {
         Assert.notNull(uuid, "Uuid cannot be null");
         ActivityEntity activityEntity = activityRepository.findById(uuid).orElseThrow(() -> new NotFoundException(ActivityEntity.class, uuid));
