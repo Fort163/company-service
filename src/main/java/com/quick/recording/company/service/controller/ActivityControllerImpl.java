@@ -10,7 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -30,7 +32,7 @@ public class ActivityControllerImpl implements CompanyServiceActivityApi {
     @Override
     @PreAuthorize("isAuthenticated()")
     public Page<ActivityDto> list(SearchActivityDto searchActivityDto, Pageable pageable) {
-        return activityService.list(searchActivityDto,pageable);
+        return activityService.list(searchActivityDto, pageable);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class ScheduleEntity extends AuditEntity {
     private Boolean isActive = true;
 
     @ManyToOne
-    @JoinColumn(name="company_id")
+    @JoinColumn(name = "company_id")
     private CompanyEntity company;
 
 }

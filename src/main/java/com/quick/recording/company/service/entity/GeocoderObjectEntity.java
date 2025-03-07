@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class GeocoderObjectEntity extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="geocoder_id")
+    @JoinColumn(name = "geocoder_id")
     private GeocoderEntity geocoder;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "kind",nullable = false)
+    @Column(name = "kind", nullable = false)
     private String kind;
 
 }

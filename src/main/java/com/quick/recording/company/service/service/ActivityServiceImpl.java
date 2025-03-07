@@ -59,7 +59,7 @@ public class ActivityServiceImpl implements ActivityService {
         ActivityEntity activityEntity = activityRepository.findById(activity.getUuid()).orElseThrow(
                 () -> new NotFoundException(messageUtil, ActivityEntity.class, activity.getUuid())
         );
-        activityEntity = activityMapper.toEntityWithoutNull(activity,activityEntity);
+        activityEntity = activityMapper.toEntityWithoutNull(activity, activityEntity);
         return activityMapper.toDto(activityRepository.save(activityEntity));
     }
 
@@ -70,7 +70,7 @@ public class ActivityServiceImpl implements ActivityService {
         ActivityEntity activityEntity = activityRepository.findById(activity.getUuid()).orElseThrow(
                 () -> new NotFoundException(messageUtil, ActivityEntity.class, activity.getUuid())
         );
-        activityEntity = activityMapper.toEntity(activity,activityEntity);
+        activityEntity = activityMapper.toEntity(activity, activityEntity);
         return activityMapper.toDto(activityRepository.save(activityEntity));
     }
 

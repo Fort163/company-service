@@ -17,19 +17,19 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class ServiceEntity extends AuditEntity {
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "work_clock",nullable = false)
+    @Column(name = "work_clock", nullable = false)
     private LocalTime workClock;
 
-    @Column(name = "is_active",nullable = false)
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "count_part_time",nullable = false)
+    @Column(name = "count_part_time", nullable = false)
     private Byte countPartTime;
 
-    @ManyToOne(optional=false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
 

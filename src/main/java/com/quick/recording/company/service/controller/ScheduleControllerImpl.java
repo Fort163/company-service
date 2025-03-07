@@ -16,7 +16,7 @@ public class ScheduleControllerImpl implements ScheduleController {
     @Override
     @GetMapping({"/schedule/{uuid}"})
     public ResponseEntity<ScheduleDto> scheduleByCompanyUuid(String uuid) {
-        if(uuid != null && !uuid.isEmpty()){
+        if (uuid != null && !uuid.isEmpty()) {
             ScheduleDto scheduleDto = new ScheduleDto();
             scheduleDto.setUuid(UUID.randomUUID());
             /*scheduleDto.setFromTime("с 10 ");

@@ -1,4 +1,5 @@
 package com.quick.recording.company.service.activity;
+
 import com.quick.recording.company.service.TestAuthHelper;
 import com.quick.recording.company.service.controller.ActivityControllerImpl;
 import com.quick.recording.resource.service.security.SSOService;
@@ -6,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.assertj.core.api.Assertions.*;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -37,7 +39,7 @@ public class ActivityTestController {
     }
 
     @Test
-    public void init(){
+    public void init() {
         assertThat(port).isNotNull();
         assertThat(controller).isNotNull();
         assertThat(restTemplate).isNotNull();
@@ -50,7 +52,7 @@ public class ActivityTestController {
 
 
     @Test
-    public void testGetList(){
+    public void testGetList() {
     }
 
 }

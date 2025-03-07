@@ -12,13 +12,11 @@ public class TestAuthHelper {
     private String token = null;
 
     public TestAuthHelper(SSOService ssoService) {
-        if(Objects.nonNull(ssoService)) {
+        if (Objects.nonNull(ssoService)) {
             try {
                 token = ssoService.getSSOResult().token();
-            }
-            catch (NoSuchElementException exception){
-            }
-            catch (URISyntaxException | AuthorizationServiceException exception){
+            } catch (NoSuchElementException exception) {
+            } catch (URISyntaxException | AuthorizationServiceException exception) {
                 exception.printStackTrace();
             }
         }

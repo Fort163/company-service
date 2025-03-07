@@ -1,11 +1,12 @@
-CREATE TABLE company (
-                         uuid uuid primary key,
-                         created_by         varchar(255),
-                         created_when       timestamp,
-                         updated_by         varchar(255),
-                         updated_when       timestamp ,
-                         name               varchar(255),
-                         is_active boolean
+CREATE TABLE company
+(
+    uuid         uuid primary key,
+    created_by   varchar(255),
+    created_when timestamp,
+    updated_by   varchar(255),
+    updated_when timestamp,
+    name         varchar(255),
+    is_active    boolean
 );
 
 CREATE TABLE company2activity
