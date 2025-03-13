@@ -1,7 +1,6 @@
 package com.quick.recording.company.service.controller;
 
 import com.quick.recording.gateway.dto.company.CompanyDto;
-import com.quick.recording.gateway.dto.company.SearchCompanyDto;
 import com.quick.recording.gateway.service.company.CompanyServiceCompanyApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,16 +16,16 @@ import java.util.UUID;
 @RequestMapping("/api/v1/company")
 public class CompanyControllerImpl implements CompanyServiceCompanyApi {
 
-
     @Override
     public ResponseEntity<CompanyDto> byUuid(UUID uuid) {
         return null;
     }
 
     @Override
-    public Page<CompanyDto> list(SearchCompanyDto searchCompanyDto, Pageable pageable) {
+    public Page<CompanyDto> list(CompanyDto companyDto, Pageable pageable) {
         return null;
     }
+
 
     @Override
     public ResponseEntity<CompanyDto> post(CompanyDto companyDto) {
