@@ -1,25 +1,21 @@
 package com.quick.recording.company.service.entity;
 
-import com.quick.recording.gateway.entity.AuditEntity;
+import com.quick.recording.gateway.entity.SmartEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "company")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyEntity extends AuditEntity {
+public class CompanyEntity extends SmartEntity {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "is_active")
-    private Boolean isActive = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

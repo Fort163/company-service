@@ -1,6 +1,6 @@
 package com.quick.recording.company.service.entity;
 
-import com.quick.recording.gateway.entity.AuditEntity;
+import com.quick.recording.gateway.entity.SmartEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScheduleEntity extends AuditEntity {
+public class ScheduleEntity extends SmartEntity {
 
     @Column(name = "clock_from")
     private LocalTime clockFrom;
@@ -27,9 +27,6 @@ public class ScheduleEntity extends AuditEntity {
     @Column(name = "day_of_week")
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
-
-    @Column(name = "is_active")
-    private Boolean isActive = true;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
