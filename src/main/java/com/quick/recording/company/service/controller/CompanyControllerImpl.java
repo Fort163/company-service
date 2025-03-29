@@ -1,7 +1,9 @@
 package com.quick.recording.company.service.controller;
 
 import com.quick.recording.gateway.dto.company.CompanyDto;
+import com.quick.recording.gateway.enumerated.Delete;
 import com.quick.recording.gateway.service.company.CompanyServiceCompanyApi;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +24,9 @@ public class CompanyControllerImpl implements CompanyServiceCompanyApi {
     }
 
     @Override
-    public Page<CompanyDto> list(CompanyDto companyDto, Pageable pageable) {
+    public Page<CompanyDto> search(CompanyDto search, Pageable pageable) {
         return null;
     }
-
 
     @Override
     public ResponseEntity<CompanyDto> post(CompanyDto companyDto) {
@@ -44,7 +45,7 @@ public class CompanyControllerImpl implements CompanyServiceCompanyApi {
     }
 
     @Override
-    public ResponseEntity<Boolean> delete(UUID uuid) {
+    public ResponseEntity<Boolean> delete(@NotNull(message = "{validation.uuid}") UUID uuid, @NotNull(message = "{validation.description}") Delete delete) {
         return null;
     }
 }

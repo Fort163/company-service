@@ -19,4 +19,9 @@ public class ActivityControllerImpl extends MainControllerAbstract<ActivityDto, 
         super(activityService);
     }
 
+    @Override
+    public Class<ActivityDto> getType() {
+        return ActivityDto.class;
+    }
+
 }

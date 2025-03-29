@@ -1,9 +1,16 @@
+#Maybe need new endpoint actuator
+#--management.endpoints.web.exposure.include=bindings
+#curl -d '{"state":"STOPPED"}' -H "Content-Type: application/json" -X POST http://<host>:<port>/actuator/bindings/myBindingName
+#curl -d '{"state":"STARTED"}' -H "Content-Type: application/json" -X POST http://<host>:<port>/actuator/bindings/myBindingName
+#curl -d '{"state":"PAUSED"}' -H "Тип содержимого: application/json" -X POST http://<host>:<port>/actuator/bindings/myBindingName
+#curl -d '{"state":"RESUMED"}' -H "Тип содержимого: application/json" -X POST http://<host>:<port>/actuator/bindings/myBindingName
+
 spring:
   application:
     name: company-service
   profiles:
-    active: local
+    active: ${ACTIVE_PROFILE:local}
   config:
-    import: configserver:http://localhost:8001
+    import: ${CONFIG_SERVER:configserver:http://localhost:8001}
   main:
     allow-bean-definition-overriding: true
