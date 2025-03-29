@@ -15,7 +15,7 @@
     <description>company-service</description>
     <properties>
         <java.version>17</java.version>
-        <docker.image.prefix>company-item</docker.image.prefix>
+        <docker.image.prefix>qr</docker.image.prefix>
         <postgres.version>42.2.19</postgres.version>
         <maven.compiler.version>3.13.0</maven.compiler.version>
         <docker.plugin.version>1.4.13</docker.plugin.version>

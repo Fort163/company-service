@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+
+  company-item-1:
+    image: qr/company-service:0.0.1-SNAPSHOT
+    environment:
+      - ACTIVE_PROFILE=${PROFILE}
+      - CONFIG_SERVER=${CONFIG_SERVER}
+    ports:
+      - "8097:8097"
+    networks:
+      - company-infrastructure
+      - kafka
+      - single-service
+
+  company-item-2:
+    image: qr/company-service:0.0.1-SNAPSHOT
+    environment:
+      - ACTIVE_PROFILE=${PROFILE}
+      - CONFIG_SERVER=${CONFIG_SERVER}
+    ports:
+      - "8098:8097"
+    networks:
+      - company-infrastructure
+      - kafka
+      - single-service
+
+networks:
+  single-service:
+    external: true
+    name: single-service-network
+  company-infrastructure:
+    external: true
+    name: company-infrastructure-network
+  kafka:
+    external: true
+    name: kafka-network
