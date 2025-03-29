@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   company-item-1:
-    image: qr/company-service:0.0.1-SNAPSHOT
+    image: fort163/qr-company-service:0.0.1-SNAPSHOT
     environment:
       - ACTIVE_PROFILE=${PROFILE}
       - CONFIG_SERVER=${CONFIG_SERVER}
@@ -15,7 +15,7 @@ services:
       - single-service
 
   company-item-2:
-    image: qr/company-service:0.0.1-SNAPSHOT
+    image: fort163/qr-company-service:0.0.1-SNAPSHOT
     environment:
       - ACTIVE_PROFILE=${PROFILE}
       - CONFIG_SERVER=${CONFIG_SERVER}
