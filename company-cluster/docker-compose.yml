@@ -19,8 +19,9 @@ services:
     environment:
       - ACTIVE_PROFILE=${PROFILE}
       - CONFIG_SERVER=${CONFIG_SERVER}
+      - SERVER_PORT=8098
     ports:
-      - "8098:8097"
+      - "8098:8098"
     networks:
       - company-infrastructure
       - kafka
