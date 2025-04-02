@@ -7,6 +7,7 @@ services:
     environment:
       - ACTIVE_PROFILE=${PROFILE}
       - CONFIG_SERVER=${CONFIG_SERVER}
+      - INSTANCE_HOSTNAME=company-cluster-company-item-1-1
     ports:
       - "8097:8097"
     networks:
@@ -20,6 +21,7 @@ services:
       - ACTIVE_PROFILE=${PROFILE}
       - CONFIG_SERVER=${CONFIG_SERVER}
       - SERVER_PORT=8098
+      - INSTANCE_HOSTNAME=company-cluster-company-item-2-1
     ports:
       - "8098:8098"
     networks:
