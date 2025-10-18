@@ -1,4 +1,4 @@
-package com.quick.recording.company.service.repository;
+package com.quick.recording.company.service.repository.entity;
 
 import com.quick.recording.company.service.entity.GeocoderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface GeocoderRepository extends JpaRepository<GeocoderEntity, UUID>, PagingAndSortingRepository<GeocoderEntity, UUID> {
-
+public interface GeocoderEntityRepository extends JpaRepository<GeocoderEntity, UUID> {
 }

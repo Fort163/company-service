@@ -1,4 +1,4 @@
-package com.quick.recording.company.service.repository;
+package com.quick.recording.company.service.repository.entity;
 
 
 import com.quick.recording.company.service.entity.ActivityEntity;
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface ActivityRepository extends JpaRepository<ActivityEntity, UUID>, PagingAndSortingRepository<ActivityEntity, UUID> {
+public interface ActivityEntityRepository extends JpaRepository<ActivityEntity, UUID> {
 
 }

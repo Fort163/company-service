@@ -1,5 +1,4 @@
-package com.quick.recording.company.service.repository;
-
+package com.quick.recording.company.service.repository.entity;
 
 import com.quick.recording.company.service.entity.ServiceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface ServiceRepository extends JpaRepository<ServiceEntity, UUID>, PagingAndSortingRepository<ServiceEntity, UUID> {
-
+public interface ServiceEntityRepository extends JpaRepository<ServiceEntity, UUID>{
 }
