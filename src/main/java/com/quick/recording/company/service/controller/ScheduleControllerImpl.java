@@ -1,29 +1,24 @@
 package com.quick.recording.company.service.controller;
 
+import com.quick.recording.company.service.entity.ScheduleEntity;
+import com.quick.recording.company.service.repository.dto.ScheduleDtoRepository;
+import com.quick.recording.company.service.service.ScheduleService;
 import com.quick.recording.gateway.dto.schedule.ScheduleDto;
-import com.quick.recording.gateway.service.company.ScheduleController;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.quick.recording.gateway.main.controller.CacheableMainControllerAbstract;
+import com.quick.recording.gateway.service.company.CompanyServiceScheduleApi;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/schedule")
-public class ScheduleControllerImpl implements ScheduleController {
+public class ScheduleControllerImpl
+        extends CacheableMainControllerAbstract<ScheduleDto, ScheduleEntity, ScheduleDtoRepository, ScheduleService>
+        implements CompanyServiceScheduleApi {
 
-    @Override
-    @GetMapping({"/schedule/{uuid}"})
-    public ResponseEntity<ScheduleDto> scheduleByCompanyUuid(String uuid) {
-        if (uuid != null && !uuid.isEmpty()) {
-            ScheduleDto scheduleDto = new ScheduleDto();
-            scheduleDto.setUuid(UUID.randomUUID());
-            /*scheduleDto.setFromTime("с 10 ");
-            scheduleDto.setToTime("до 19 видимо ");*/
-            return ResponseEntity.ok(scheduleDto);
-        }
-        return ResponseEntity.notFound().build();
+    @Autowired
+    public ScheduleControllerImpl(ScheduleService service, ScheduleDtoRepository repository) {
+        super(service, repository);
     }
 
 }
