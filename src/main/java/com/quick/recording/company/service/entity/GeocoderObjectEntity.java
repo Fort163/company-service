@@ -4,15 +4,17 @@ import com.quick.recording.gateway.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "geocoder_object")
 @Data
+@EqualsAndHashCode(callSuper = true, exclude = {"geocoder"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class GeocoderObjectEntity extends BaseEntity {
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "geocoder_id")
     private GeocoderEntity geocoder;
 

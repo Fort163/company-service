@@ -1,16 +1,19 @@
 package com.quick.recording.company.service.entity;
 
 import com.quick.recording.gateway.entity.SmartEntity;
+import com.quick.recording.gateway.enumerated.DayOfWeek;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Entity(name = "schedule")
 @Data
+@EqualsAndHashCode(callSuper = true, exclude = {"company","employee"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScheduleEntity extends SmartEntity {
@@ -28,8 +31,13 @@ public class ScheduleEntity extends SmartEntity {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = CompanyEntity.class)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
+
+    @ManyToOne(targetEntity = EmployeeEntity.class)
+    @JoinColumn(name = "employee_id")
+    private EmployeeEntity employee;
+
 
 }

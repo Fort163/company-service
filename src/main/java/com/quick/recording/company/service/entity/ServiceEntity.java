@@ -7,12 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
 @Entity(name = "service")
 @Data
+@EqualsAndHashCode(callSuper = true, exclude = {"company","employee"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceEntity extends SmartEntity {
@@ -29,5 +31,9 @@ public class ServiceEntity extends SmartEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private EmployeeEntity employee;
 
 }
