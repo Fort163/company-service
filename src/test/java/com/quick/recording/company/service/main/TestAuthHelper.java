@@ -1,4 +1,4 @@
-package com.quick.recording.company.service;
+package com.quick.recording.company.service.main;
 
 import com.quick.recording.resource.service.security.SSOService;
 import org.springframework.security.access.AuthorizationServiceException;
