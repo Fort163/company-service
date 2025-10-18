@@ -21,4 +21,20 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
         <sqlFile path="db/changelog/script/create-schema-geoposition.sql"/>
     </changeSet>
 
+    <changeSet id="4" author="Fort163">
+        <sqlFile path="db/changelog/script/create-schema-profession.sql"/>
+    </changeSet>
+
+    <changeSet id="5" author="Fort163">
+        <sqlFile path="db/changelog/script/create-schema-employee.sql"/>
+    </changeSet>
+
+    <changeSet id="6" author="Fort163">
+        <sqlFile path="db/changelog/script/create-schema-schedule.sql"/>
+    </changeSet>
+
+    <changeSet id="7" author="Fort163">
+        <sqlFile path="db/changelog/script/create-schema-service.sql"/>
+    </changeSet>
+
 </databaseChangeLog>

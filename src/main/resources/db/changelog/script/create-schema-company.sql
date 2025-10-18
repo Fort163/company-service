@@ -1,12 +1,13 @@
 CREATE TABLE company
 (
     uuid         uuid primary key,
-    created_by   varchar(255),
+    created_by   varchar(100),
     created_when timestamp,
-    updated_by   varchar(255),
+    updated_by   varchar(100),
     updated_when timestamp,
-    name         varchar(255),
-    is_active    boolean
+    is_active    boolean,
+    name         varchar(255) not null,
+    description  varchar(1024)
 );
 
 CREATE TABLE company2activity

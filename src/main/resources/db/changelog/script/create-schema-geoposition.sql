@@ -5,6 +5,7 @@ CREATE TABLE geocoder
     created_when timestamp,
     updated_by   varchar(255),
     updated_when timestamp,
+    is_active    boolean,
     longitude    decimal,
     latitude     decimal,
     name         varchar(1000),
