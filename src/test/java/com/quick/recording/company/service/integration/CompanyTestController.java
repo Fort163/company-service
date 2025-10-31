@@ -1,26 +1,29 @@
 package com.quick.recording.company.service.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.quick.recording.company.service.CompanyServiceAppFactory;
 import com.quick.recording.company.service.ContextConstant;
-import com.quick.recording.company.service.entity.ActivityEntity;
-import com.quick.recording.company.service.main.MainTestController;
-import com.quick.recording.company.service.main.TestCase;
-import com.quick.recording.company.service.service.ActivityServiceImpl;
-import com.quick.recording.company.service.service.CompanyServiceImpl;
+import com.quick.recording.company.service.service.ActivityService;
+import com.quick.recording.company.service.service.CompanyService;
+import com.quick.recording.company.service.service.ServiceService;
 import com.quick.recording.gateway.config.error.ApiError;
+import com.quick.recording.gateway.dto.SmartDto;
 import com.quick.recording.gateway.dto.company.ActivityDto;
 import com.quick.recording.gateway.dto.company.CompanyDto;
 import com.quick.recording.gateway.dto.company.ServiceDto;
 import com.quick.recording.gateway.dto.schedule.ScheduleDto;
 import com.quick.recording.gateway.dto.yandex.GeocoderDto;
 import com.quick.recording.gateway.dto.yandex.GeocoderObjectDto;
+import com.quick.recording.gateway.entity.SmartEntity;
 import com.quick.recording.gateway.enumerated.DayOfWeek;
-import org.junit.jupiter.api.*;
+import com.quick.recording.gateway.main.service.local.MainService;
+import com.quick.recording.gateway.test.MainTestController;
+import com.quick.recording.gateway.test.TestCase;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -31,27 +34,32 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DisplayName("Test Api Company in company service")
 public class CompanyTestController extends MainTestController<CompanyDto> {
 
-    TypeReference<CompanyDto> typeCompanyDto = new TypeReference<CompanyDto>() {};
-    TypeReference<Page<CompanyDto>> typePageCompanyDto = new TypeReference<Page<CompanyDto>>() {};
+    private TypeReference<CompanyDto> typeDto = new TypeReference<CompanyDto>() {};
+    private TypeReference<Page<CompanyDto>> typePageDto = new TypeReference<Page<CompanyDto>>() {};
 
     @Autowired
-    private CompanyServiceImpl companyService;
+    private CompanyService companyService;
 
     @Autowired
-    private ActivityServiceImpl activityService;
+    private ActivityService activityService;
+
+    @Autowired
+    private ServiceService serviceService;
 
     @Test
     @Order(1)
     public void loadContext() {
         assertThat(companyService).isNotNull();
         assertThat(activityService).isNotNull();
+        assertThat(serviceService).isNotNull();
+    }
+
+    @Override
+    public List<MainService<? extends SmartEntity, ? extends SmartDto>> getServicesForClear() {
+        return List.of(serviceService,companyService,activityService);
     }
 
     @Override
@@ -86,21 +94,20 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         scheduleDto.setWork(true);
         List<ScheduleDto> scheduleList = List.of(scheduleDto);
 
-        if(activityService.findAll().isEmpty()){
-            ActivityDto dto = new ActivityDto();
-            dto.setName("Test company");
-            dto.setDescription("Test company description");
-            activityService.post(dto);
+        List<ActivityDto> activityList = getDtoListFromService(activityService);
+
+        if(activityList.isEmpty()){
+            CompanyServiceAppFactory.createActivity(activityService);
+            activityList = getDtoListFromService(activityService);
         }
 
-        List<ActivityDto> activityList = activityService.getMapper().toDtoList(activityService.findAll());
         int activitySize = activityList.size();
 
         CompanyDto dto1 = new CompanyDto();
         dto1.setName("Test 1");
         dto1.setActivities(activityList);
         dto1.setSchedules(scheduleList);
-        TestCase<CompanyDto, CompanyDto> test1 = new TestCase<>(dto1, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test1 = new TestCase<>(dto1, typeDto);
         test1.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test1.addTest(result -> assertThat(result.getResult().getGeoPosition()).isNull());
         test1.addTest(result -> assertThat(result.getResult().getActivities().size()).isEqualTo(activitySize));
@@ -111,7 +118,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         dto2.setName("Test 2");
         dto2.setGeoPosition(geocoder1);
         dto2.setSchedules(scheduleList);
-        TestCase<CompanyDto, CompanyDto> test2= new TestCase<>(dto2, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test2= new TestCase<>(dto2, typeDto);
         test2.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test2.addTest(result -> assertThat(result.getResult().getGeoPosition().getUuid()).isNotNull());
         test2.addTest(result -> assertThat(result.getResult().getActivities().size()).isEqualTo(0));
@@ -122,7 +129,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         dto3.setName("Test 3");
         dto3.setGeoPosition(geocoder1);
         dto3.setActivities(activityList);
-        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(dto3, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(dto3, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getGeoPosition().getUuid()).isNotNull());
         test3.addTest(result -> assertThat(result.getResult().getActivities().size()).isEqualTo(activitySize));
@@ -144,7 +151,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         dto5.setGeoPosition(geocoder1);
         dto5.setActivities(activityList);
         dto5.setSchedules(scheduleList);
-        TestCase<CompanyDto, CompanyDto> test5 = new TestCase<>(dto5, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test5 = new TestCase<>(dto5, typeDto);
         test5.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test5.addTest(result -> assertThat(result.getResult().getUuid()).isNotNull());
         test5.addTest(result -> assertThat(result.getResult().getName()).isEqualTo("Test 4"));
@@ -173,7 +180,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         test1.addTest(result -> assertThat(result.getResult().getMessage().contains("CompanyEntity")).isTrue());
 
         CompanyDto success = this.getLastCreateObjectClone();
-        TestCase<CompanyDto, CompanyDto> test2 = new TestCase<>(success, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test2 = new TestCase<>(success, typeDto);
         test2.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test2.addTest(result -> assertThat(result.getResult()).isNotNull());
         test2.addTest(result -> assertThat(result.getResult().getName()).isEqualTo("Test 4"));
@@ -198,7 +205,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         test2.addTest(result -> assertThat(result.getResult().getMessage().contains("null")).isTrue());
 
         CompanyDto success = this.getLastCreateObjectClone();
-        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(success, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success.getUuid()));
 
@@ -218,14 +225,14 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
     @Override
     public List<TestCase<CompanyDto, ?>> listGetTestCases() {
         CompanyDto successAll = new CompanyDto();
-        TestCase<CompanyDto, Page<CompanyDto>> test1 = new TestCase<>(successAll, typePageCompanyDto);
+        TestCase<CompanyDto, Page<CompanyDto>> test1 = new TestCase<>(successAll, typePageDto);
         test1.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test1.addTest(result -> assertThat(result.getResult()).isNotNull());
         test1.addTest(result -> assertThat(result.getResult().isEmpty()).isFalse());
 
         CompanyDto successOne = new CompanyDto();
         successOne.setName("Test 4");
-        TestCase<CompanyDto, Page<CompanyDto>> test2 = new TestCase<>(successOne, typePageCompanyDto);
+        TestCase<CompanyDto, Page<CompanyDto>> test2 = new TestCase<>(successOne, typePageDto);
         test2.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test2.addTest(result -> assertThat(result.getResult()).isNotNull());
         test2.addTest(result -> assertThat(result.getResult().isEmpty()).isFalse());
@@ -240,17 +247,13 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         ActivityDto emptyActivity = new ActivityDto();
         CompanyDto company = this.getLastCreateObjectClone();
 
-        GeocoderDto geoPosition = company.getGeoPosition();
         List<ScheduleDto> schedules = company.getSchedules();
         List<ActivityDto> activities = company.getActivities();
 
         if(activities.isEmpty()){
-            ActivityDto dto = new ActivityDto();
-            dto.setName("Test");
-            dto.setDescription("Test description");
-            activityService.post(dto);
+            CompanyServiceAppFactory.createActivity(activityService);
         }
-        List<ActivityDto> activityList = activityService.getMapper().toDtoList(activityService.findAll());
+        List<ActivityDto> activityList = getDtoListFromService(activityService);
         int size = activityList.size();
 
         GeocoderDto geocoderNew = new GeocoderDto();
@@ -328,10 +331,16 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         test7.addTest(result -> assertThat(result.code().is5xxServerError()).isTrue());
         test7.addTest(result -> assertThat(result.getResult().getMessage().contains("CompanyEntity")).isTrue());
 
+
+
         CompanyDto success1 = this.getLastCreateObjectClone();
+
+        ServiceDto service = CompanyServiceAppFactory.createService(serviceService, success1);
+
+        success1.setServices(List.of(service));
         success1.setDescription("Test description put new");
         success1.setActivities(activityList);
-        TestCase<CompanyDto, CompanyDto> test8 = new TestCase<>(success1, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test8 = new TestCase<>(success1, typeDto);
         test8.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test8.addTest(result -> assertThat(result.getResult()).isNotNull());
         test8.addTest(result -> assertThat(result.getResult().getCreatedBy()).isNotNull());
@@ -339,19 +348,18 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         test8.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success1.getUuid()));
         test8.addTest(result -> assertThat(result.getResult().getDescription()).isEqualTo("Test description put new"));
         test8.addTest(result -> assertThat(result.getResult().getActivities().size()).isEqualTo(size));
+        test8.addTest(result -> assertThat(result.getResult().getServices().isEmpty()).isFalse());
+        test8.addTest(result -> assertThat(result.getResult().getServices().size()).isEqualTo(1));
 
-        List<ActivityEntity> all = activityService.findAll();
-        List<ActivityDto> activitiesSingle = null;
-        if(all.size() > 0) {
-            activitiesSingle = List.of(activityService.getMapper().toDto(all.get(0)));
-        }
+        List<ActivityDto> activitiesSingle = List.of(getDtoFromService(activityService));
 
         CompanyDto success2 = this.getLastCreateObjectClone();
         success2.setName("Test from put");
         if(Objects.nonNull(activitiesSingle)) {
             success2.setActivities(activitiesSingle);
         }
-        TestCase<CompanyDto, CompanyDto> test9 = new TestCase<>(success2, typeCompanyDto);
+        success2.setServices(List.of());
+        TestCase<CompanyDto, CompanyDto> test9 = new TestCase<>(success2, typeDto);
         test9.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test9.addTest(result -> assertThat(result.getResult()).isNotNull());
         test9.addTest(result -> assertThat(result.getResult().getCreatedBy()).isNotNull());
@@ -361,6 +369,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         if(Objects.nonNull(activitiesSingle)) {
             test9.addTest(result -> assertThat(result.getResult().getActivities().size()).isEqualTo(1));
         }
+        test9.addTest(result -> assertThat(result.getResult().getServices().isEmpty()).isTrue());
 
         return List.of(test1, test2, test3, test4, test5, test6, test7, test8, test9);
     }
@@ -369,7 +378,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
     public List<TestCase<CompanyDto, ?>> patchGetTestCases() {
         CompanyDto create = this.getLastCreateObjectClone();
         int countActivity = create.getActivities().size();
-        List<ActivityDto> activityList = activityService.getMapper().toDtoList(activityService.findAll());
+        List<ActivityDto> activityList = getDtoListFromService(activityService);
         ActivityDto emptyActivity = new ActivityDto();
         ScheduleDto emptySchedule = new ScheduleDto();
         ServiceDto emptyService = new ServiceDto();
@@ -413,7 +422,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         CompanyDto success1 = new CompanyDto();
         success1.setUuid(create.getUuid());
         success1.setName("Test from path");
-        TestCase<CompanyDto, CompanyDto> test5 = new TestCase<>(success1, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test5 = new TestCase<>(success1, typeDto);
         test5.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test5.addTest(result -> assertThat(result.getResult()).isNotNull());
         test5.addTest(result -> assertThat(result.getResult().getCreatedBy()).isNotNull());
@@ -425,7 +434,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         CompanyDto success2 = new CompanyDto();
         success2.setUuid(create.getUuid());
         otherActivity.ifPresent(dto -> success2.setActivities(List.of(dto)));
-        TestCase<CompanyDto, CompanyDto> test6 = new TestCase<>(success2, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test6 = new TestCase<>(success2, typeDto);
         test6.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test6.addTest(result -> assertThat(result.getResult()).isNotNull());
         test6.addTest(result -> assertThat(result.getResult().getCreatedBy()).isNotNull());
@@ -453,7 +462,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         test2.addTest(result -> assertThat(result.getResult().getMessage().contains("null")).isTrue());
 
         CompanyDto success = this.getLastCreateObjectClone();
-        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(success, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success.getUuid()));
         test3.addTest(result -> assertThat(result.getResult().getIsActive()).isFalse());
@@ -476,7 +485,7 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
         test2.addTest(result -> assertThat(result.getResult().getMessage().contains("null")).isTrue());
 
         CompanyDto success = this.getLastCreateObjectClone();
-        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(success, typeCompanyDto);
+        TestCase<CompanyDto, CompanyDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success.getUuid()));
         test3.addTest(result -> assertThat(result.getResult().getIsActive()).isTrue());

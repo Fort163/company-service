@@ -1,9 +1,6 @@
 package com.quick.recording.company.service;
 
-import com.quick.recording.company.service.integration.ActivityTestController;
-import com.quick.recording.company.service.integration.CompanyTestController;
-import com.quick.recording.company.service.integration.FinishIntegration;
-import com.quick.recording.company.service.integration.GeocoderTestController;
+import com.quick.recording.company.service.integration.*;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
@@ -15,10 +12,13 @@ import org.springframework.test.context.ActiveProfiles;
         ActivityTestController.class,
         CompanyTestController.class,
         GeocoderTestController.class,
+        ServiceTestController.class,
+        ProfessionTestController.class,
+        ScheduleTestController.class,
+        EmployeeTestController.class,
         FinishIntegration.class
 })
 @ActiveProfiles("test")
 class CompanyServiceAppSuiteTest {
-
 
 }

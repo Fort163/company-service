@@ -21,7 +21,6 @@
         <qr.gateway.version>0.0.1-SNAPSHOT</qr.gateway.version>
         <docker.image.prefix>qr</docker.image.prefix>
         <docker.hub.location>fort163</docker.hub.location>
-        <suite.version>1.11.0-M1</suite.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,17 +36,6 @@
             <groupId>com.quick.recording</groupId>
             <artifactId>qr-gateway</artifactId>
             <version>${qr.gateway.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite</artifactId>
-            <version>${suite.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

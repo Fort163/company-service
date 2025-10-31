@@ -2,17 +2,17 @@ package com.quick.recording.company.service.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.quick.recording.company.service.ContextConstant;
-import com.quick.recording.company.service.main.MainTestController;
-import com.quick.recording.company.service.main.TestCase;
+import com.quick.recording.company.service.service.ActivityService;
 import com.quick.recording.gateway.config.error.ApiError;
+import com.quick.recording.gateway.dto.SmartDto;
 import com.quick.recording.gateway.dto.company.ActivityDto;
+import com.quick.recording.gateway.entity.SmartEntity;
+import com.quick.recording.gateway.main.service.local.MainService;
+import com.quick.recording.gateway.test.MainTestController;
+import com.quick.recording.gateway.test.TestCase;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +21,19 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DisplayName("Test Api Activity in company service")
 public class ActivityTestController extends MainTestController<ActivityDto> {
 
-    TypeReference<ActivityDto> typeActivityDto = new TypeReference<ActivityDto>() {};
-    TypeReference<Page<ActivityDto>> typePageActivityDto = new TypeReference<Page<ActivityDto>>() {};
+    private TypeReference<ActivityDto> typeDto = new TypeReference<ActivityDto>() {};
+    private TypeReference<Page<ActivityDto>> typePageDto = new TypeReference<Page<ActivityDto>>() {};
+
+    @Autowired
+    private ActivityService activityService;
+
+    @Override
+    public List<MainService<? extends SmartEntity, ? extends SmartDto>> getServicesForClear() {
+        return List.of(activityService);
+    }
 
     @Override
     public String uri(){
@@ -59,7 +63,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
             ActivityDto success = new ActivityDto();
             success.setName("Activity for list");
             success.setDescription("Activity for list description");
-            TestCase<ActivityDto, ActivityDto> test2 = new TestCase<>(success, typeActivityDto);
+            TestCase<ActivityDto, ActivityDto> test2 = new TestCase<>(success, typeDto);
             test2.addTest(result -> assertThat(result.getCode().is2xxSuccessful()).isTrue());
             test2.addTest(result -> assertThat(result.getResult().getName()).isEqualTo("Activity for list"));
             test2.addTest(result -> assertThat(result.getResult().getUuid()).isNotNull());
@@ -77,7 +81,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         ActivityDto successForTest = new ActivityDto();
         successForTest.setName("Test");
         successForTest.setDescription("Test description");
-        TestCase<ActivityDto, ActivityDto> test4 = new TestCase<>(successForTest, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test4 = new TestCase<>(successForTest, typeDto);
         test4.addTest(result -> assertThat(result.getCode().is2xxSuccessful()).isTrue());
         test4.addTest(result -> assertThat(result.getResult().getName()).isEqualTo("Test"));
         test4.addTest(result -> assertThat(result.getResult().getUuid()).isNotNull());
@@ -95,7 +99,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         test1.addTest(result -> assertThat(result.getResult().getMessage().contains("ActivityEntity")).isTrue());
 
         ActivityDto success = this.getLastCreateObjectClone();
-        TestCase<ActivityDto, ActivityDto> test2 = new TestCase<>(success, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test2 = new TestCase<>(success, typeDto);
         test2.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test2.addTest(result -> assertThat(result.getResult()).isNotNull());
         test2.addTest(result -> assertThat(result.getResult().getName()).isEqualTo("Test"));
@@ -120,7 +124,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         test2.addTest(result -> assertThat(result.getResult().getMessage().contains("null")).isTrue());
 
         ActivityDto success = this.getLastCreateObjectClone();
-        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success.getUuid()));
 
@@ -140,14 +144,14 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
     @Override
     public List<TestCase<ActivityDto, ?>> listGetTestCases() {
         ActivityDto successAll = new ActivityDto();
-        TestCase<ActivityDto, Page<ActivityDto>> test1 = new TestCase<>(successAll, typePageActivityDto);
+        TestCase<ActivityDto, Page<ActivityDto>> test1 = new TestCase<>(successAll, typePageDto);
         test1.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test1.addTest(result -> assertThat(result.getResult()).isNotNull());
         test1.addTest(result -> assertThat(result.getResult().isEmpty()).isFalse());
 
         ActivityDto successOne = new ActivityDto();
         successOne.setName("Test");
-        TestCase<ActivityDto, Page<ActivityDto>> test2 = new TestCase<>(successOne, typePageActivityDto);
+        TestCase<ActivityDto, Page<ActivityDto>> test2 = new TestCase<>(successOne, typePageDto);
         test2.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test2.addTest(result -> assertThat(result.getResult()).isNotNull());
         test2.addTest(result -> assertThat(result.getResult().isEmpty()).isFalse());
@@ -177,7 +181,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         ActivityDto success = this.getLastCreateObjectClone();
         success.setName("Test new");
         success.setDescription("Test description new");
-        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult()).isNotNull());
         test3.addTest(result -> assertThat(result.getResult().getCreatedBy()).isNotNull());
@@ -202,7 +206,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         ActivityDto success = new ActivityDto();
         success.setUuid(createObject.getUuid());
         success.setName("Test");
-        TestCase<ActivityDto, ActivityDto> test2 = new TestCase<>(success, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test2 = new TestCase<>(success, typeDto);
         test2.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test2.addTest(result -> assertThat(result.getResult()).isNotNull());
         test2.addTest(result -> assertThat(result.getResult().getCreatedBy()).isNotNull());
@@ -229,7 +233,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         test2.addTest(result -> assertThat(result.getResult().getMessage().contains("null")).isTrue());
 
         ActivityDto success = this.getLastCreateObjectClone();
-        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success.getUuid()));
         test3.addTest(result -> assertThat(result.getResult().getIsActive()).isFalse());
@@ -252,7 +256,7 @@ public class ActivityTestController extends MainTestController<ActivityDto> {
         test2.addTest(result -> assertThat(result.getResult().getMessage().contains("null")).isTrue());
 
         ActivityDto success = this.getLastCreateObjectClone();
-        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeActivityDto);
+        TestCase<ActivityDto, ActivityDto> test3 = new TestCase<>(success, typeDto);
         test3.addTest(result -> assertThat(result.code().is2xxSuccessful()).isTrue());
         test3.addTest(result -> assertThat(result.getResult().getUuid()).isEqualTo(success.getUuid()));
         test3.addTest(result -> assertThat(result.getResult().getIsActive()).isTrue());
