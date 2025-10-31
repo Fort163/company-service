@@ -31,7 +31,7 @@ public class ScheduleEntity extends SmartEntity {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
 
-    @ManyToOne(targetEntity = CompanyEntity.class)
+    @ManyToOne(targetEntity = CompanyEntity.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
 
