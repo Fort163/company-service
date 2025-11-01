@@ -1,7 +1,7 @@
 package com.quick.recording.company.service.controller;
 
 import com.quick.recording.company.service.entity.GeocoderEntity;
-import com.quick.recording.company.service.service.GeocoderService;
+import com.quick.recording.company.service.service.local.GeocoderService;
 import com.quick.recording.gateway.dto.yandex.GeocoderDto;
 import com.quick.recording.gateway.main.controller.MainControllerAbstract;
 import com.quick.recording.gateway.service.company.CompanyServiceGeocoderApi;

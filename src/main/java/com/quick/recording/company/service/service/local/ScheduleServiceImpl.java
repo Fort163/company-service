@@ -1,4 +1,4 @@
-package com.quick.recording.company.service.service;
+package com.quick.recording.company.service.service.local;
 
 import com.quick.recording.company.service.entity.ScheduleEntity;
 import com.quick.recording.company.service.mapper.ScheduleMapper;

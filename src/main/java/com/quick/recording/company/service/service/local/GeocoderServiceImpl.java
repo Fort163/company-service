@@ -1,4 +1,4 @@
-package com.quick.recording.company.service.service;
+package com.quick.recording.company.service.service.local;
 
 import com.quick.recording.company.service.entity.GeocoderEntity;
 import com.quick.recording.company.service.entity.GeocoderObjectEntity;

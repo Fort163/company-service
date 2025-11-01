@@ -2,7 +2,7 @@ package com.quick.recording.company.service.controller;
 
 import com.quick.recording.company.service.entity.ActivityEntity;
 import com.quick.recording.company.service.repository.dto.ActivityDtoRepository;
-import com.quick.recording.company.service.service.ActivityService;
+import com.quick.recording.company.service.service.local.ActivityService;
 import com.quick.recording.gateway.dto.company.ActivityDto;
 import com.quick.recording.gateway.main.controller.CacheableMainControllerAbstract;
 import com.quick.recording.gateway.service.company.CompanyServiceActivityApi;

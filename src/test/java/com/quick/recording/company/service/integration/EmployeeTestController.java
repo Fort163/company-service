@@ -3,7 +3,7 @@ package com.quick.recording.company.service.integration;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.quick.recording.company.service.CompanyServiceAppFactory;
 import com.quick.recording.company.service.ContextConstant;
-import com.quick.recording.company.service.service.*;
+import com.quick.recording.company.service.service.local.*;
 import com.quick.recording.gateway.config.error.ApiError;
 import com.quick.recording.gateway.dto.BaseDto;
 import com.quick.recording.gateway.dto.SmartDto;

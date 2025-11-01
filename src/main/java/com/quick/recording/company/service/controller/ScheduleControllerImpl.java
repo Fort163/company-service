@@ -2,7 +2,7 @@ package com.quick.recording.company.service.controller;
 
 import com.quick.recording.company.service.entity.ScheduleEntity;
 import com.quick.recording.company.service.repository.dto.ScheduleDtoRepository;
-import com.quick.recording.company.service.service.ScheduleService;
+import com.quick.recording.company.service.service.local.ScheduleService;
 import com.quick.recording.gateway.dto.schedule.ScheduleDto;
 import com.quick.recording.gateway.main.controller.CacheableMainControllerAbstract;
 import com.quick.recording.gateway.service.company.CompanyServiceScheduleApi;

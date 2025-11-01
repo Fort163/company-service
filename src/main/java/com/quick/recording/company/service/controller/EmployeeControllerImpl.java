@@ -2,7 +2,7 @@ package com.quick.recording.company.service.controller;
 
 import com.quick.recording.company.service.entity.EmployeeEntity;
 import com.quick.recording.company.service.repository.dto.EmployeeDtoRepository;
-import com.quick.recording.company.service.service.EmployeeService;
+import com.quick.recording.company.service.service.local.EmployeeService;
 import com.quick.recording.gateway.dto.company.EmployeeDto;
 import com.quick.recording.gateway.main.controller.CacheableMainControllerAbstract;
 import com.quick.recording.gateway.service.company.CompanyServiceEmployeeApi;

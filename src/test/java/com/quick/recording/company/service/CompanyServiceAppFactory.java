@@ -1,6 +1,6 @@
 package com.quick.recording.company.service;
 
-import com.quick.recording.company.service.service.*;
+import com.quick.recording.company.service.service.local.*;
 import com.quick.recording.gateway.dto.company.*;
 import com.quick.recording.gateway.dto.schedule.ScheduleDto;
 import com.quick.recording.gateway.dto.yandex.GeocoderDto;

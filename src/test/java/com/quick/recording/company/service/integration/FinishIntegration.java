@@ -1,6 +1,6 @@
 package com.quick.recording.company.service.integration;
 
-import com.quick.recording.company.service.service.*;
+import com.quick.recording.company.service.service.local.*;
 import com.quick.recording.gateway.dto.SmartDto;
 import com.quick.recording.gateway.entity.SmartEntity;
 import com.quick.recording.gateway.main.service.local.MainService;

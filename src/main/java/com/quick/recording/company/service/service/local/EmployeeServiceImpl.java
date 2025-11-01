@@ -1,4 +1,4 @@
-package com.quick.recording.company.service.service;
+package com.quick.recording.company.service.service.local;
 
 import com.quick.recording.company.service.entity.EmployeeEntity;
 import com.quick.recording.company.service.mapper.EmployeeMapper;

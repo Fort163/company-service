@@ -2,9 +2,9 @@ package com.quick.recording.company.service.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.quick.recording.company.service.CompanyServiceAppFactory;
-import com.quick.recording.company.service.service.ActivityService;
-import com.quick.recording.company.service.service.CompanyService;
-import com.quick.recording.company.service.service.GeocoderService;
+import com.quick.recording.company.service.service.local.ActivityService;
+import com.quick.recording.company.service.service.local.CompanyService;
+import com.quick.recording.company.service.service.local.GeocoderService;
 import com.quick.recording.gateway.config.error.ApiError;
 import com.quick.recording.gateway.dto.SmartDto;
 import com.quick.recording.gateway.dto.company.CompanyDto;
