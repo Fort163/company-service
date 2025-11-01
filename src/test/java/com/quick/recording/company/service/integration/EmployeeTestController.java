@@ -2,11 +2,12 @@ package com.quick.recording.company.service.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.quick.recording.company.service.CompanyServiceAppFactory;
-import com.quick.recording.company.service.ContextConstant;
 import com.quick.recording.company.service.service.local.*;
+import com.quick.recording.company.service.service.remote.RemoteUserService;
 import com.quick.recording.gateway.config.error.ApiError;
 import com.quick.recording.gateway.dto.BaseDto;
 import com.quick.recording.gateway.dto.SmartDto;
+import com.quick.recording.gateway.dto.auth.AuthUserDto;
 import com.quick.recording.gateway.dto.company.CompanyDto;
 import com.quick.recording.gateway.dto.company.EmployeeDto;
 import com.quick.recording.gateway.dto.company.ProfessionDto;
@@ -16,23 +17,31 @@ import com.quick.recording.gateway.enumerated.CompanyHierarchyEnum;
 import com.quick.recording.gateway.main.service.local.MainService;
 import com.quick.recording.gateway.test.MainTestController;
 import com.quick.recording.gateway.test.TestCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.quick.recording.company.service.ContextConstant.EMPLOYEE_DTO;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @DisplayName("Test Api Employee in company service")
 public class EmployeeTestController extends MainTestController<EmployeeDto> {
 
     private TypeReference<EmployeeDto> typeDto = new TypeReference<EmployeeDto>() {};
     private TypeReference<Page<EmployeeDto>> typePageDto = new TypeReference<Page<EmployeeDto>>() {};
+
+    private final UUID presentUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
+    private final UUID notFoundUUID = UUID.fromString("00000000-0000-0000-0000-000000000001");
+
+    @MockitoBean
+    private RemoteUserService remoteUserService;
 
     @Autowired
     private CompanyService companyService;
@@ -60,46 +69,44 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         return "/api/v1/employee";
     }
 
-    @Override
-    public String contextVariableName() {
-        return EMPLOYEE_DTO;
+    @BeforeEach
+    void setUp() {
+        ApiError apiError = new ApiError();
+
+        AuthUserDto userDto = new AuthUserDto();
+        userDto.setUuid(presentUUID);
+        userDto.setUsername("Test");
+
+        //User service
+        when(remoteUserService.byUuid(presentUUID))
+                .thenReturn(ResponseEntity.ok(userDto));
+
+        when(remoteUserService.byUuid(notFoundUUID))
+                .thenAnswer(invocationOnMock -> ResponseEntity.status(500).body(apiError));
+
+        when(remoteUserService.getType())
+                .thenReturn(AuthUserDto.class);
+
     }
 
     @Override
     public List<TestCase<EmployeeDto, ?>> postGetTestCases() {
         BaseDto emptyDto = new BaseDto();
 
-        CompanyDto companyDto;
-        if(getTestContextHolder().isSuite()){
-            companyDto = getTestContextHolder().getLast(ContextConstant.COMPANY_DTO);
-        }
-        else {
-            companyDto = getDtoFromService(companyService);
-            if(Objects.isNull(companyDto)) {
-                companyDto = CompanyServiceAppFactory
-                        .createCompany(companyService, CompanyServiceAppFactory.createActivity(activityService));
-            }
+        CompanyDto companyDto = getDtoFromService(companyService);
+        if(Objects.isNull(companyDto)) {
+            companyDto = CompanyServiceAppFactory
+                    .createCompany(companyService, CompanyServiceAppFactory.createActivity(activityService));
         }
 
-        ServiceDto serviceDto;
-        if(getTestContextHolder().isSuite()){
-            serviceDto = getTestContextHolder().getLast(ContextConstant.SERVICE_DTO);
+        ServiceDto serviceDto = getDtoFromService(serviceService);
+        if(Objects.isNull(serviceDto)) {
+            serviceDto = CompanyServiceAppFactory.createService(serviceService, companyDto);
         }
-        else {
-            serviceDto = getDtoFromService(serviceService);
-            if(Objects.isNull(serviceDto)) {
-                serviceDto = CompanyServiceAppFactory.createService(serviceService, companyDto);
-            }
-        }
-        ProfessionDto professionDto;
-        if(getTestContextHolder().isSuite()){
-            professionDto = getTestContextHolder().getLast(ContextConstant.PROFESSION_DTO);
-        }
-        else {
-            professionDto = getDtoFromService(professionService);
-            if(Objects.isNull(professionDto)) {
-                professionDto = CompanyServiceAppFactory.createProfession(professionService, companyDto, serviceDto);
-            }
+
+        ProfessionDto professionDto = getDtoFromService(professionService);
+        if(Objects.isNull(professionDto)) {
+            professionDto = CompanyServiceAppFactory.createProfession(professionService, companyDto, serviceDto);
         }
 
         EmployeeDto fail1 = new EmployeeDto();
@@ -126,13 +133,16 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         fail2.setProfession(new ProfessionDto());
         fail2.setServices(List.of(emptyDto));
         fail2.setCompany(emptyDto);
-        fail2.setAuthId(UUID.randomUUID());
+        fail2.setAuthId(notFoundUUID);
         fail2.setPermissions(List.of(CompanyHierarchyEnum.OWNER));
         TestCase<EmployeeDto, ApiError> test2 = new TestCase<>(fail2, typeError);
         test2.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test2.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(3));
+        test2.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(4));
         test2.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("profession"))
+        ).isTrue());
+        test2.addTest(result -> assertThat(
+                result.getResult().getErrors().stream().anyMatch(error -> error.contains("authId"))
         ).isTrue());
         test2.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("company"))
@@ -145,7 +155,7 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         final UUID serviceId = serviceDto.getUuid();
         final UUID professionId = professionDto.getUuid();
         EmployeeDto success = new EmployeeDto();
-        success.setAuthId(UUID.randomUUID());
+        success.setAuthId(presentUUID);
         success.setPermissions(List.of(CompanyHierarchyEnum.OWNER,CompanyHierarchyEnum.MANAGER));
         success.setCompany(companyDto);
         success.setProfession(professionDto);
@@ -272,11 +282,14 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         fail2.setCompany(emptyDto);
         fail2.setProfession(new ProfessionDto());
         fail2.setServices(List.of(emptyDto));
-        fail2.setAuthId(UUID.randomUUID());
+        fail2.setAuthId(notFoundUUID);
         fail2.setPermissions(List.of(CompanyHierarchyEnum.OWNER,CompanyHierarchyEnum.MANAGER));
         TestCase<EmployeeDto, ApiError> test2 = new TestCase<>(fail2, typeError);
         test2.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test2.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(3));
+        test2.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(4));
+        test2.addTest(result -> assertThat(
+                result.getResult().getErrors().stream().anyMatch(error -> error.contains("authId"))
+        ).isTrue());
         test2.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("company"))
         ).isTrue());
@@ -328,11 +341,15 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         fail1.setCompany(emptyDto);
         fail1.setProfession(new ProfessionDto());
         fail1.setServices(List.of(emptyDto));
+        fail1.setAuthId(notFoundUUID);
         TestCase<EmployeeDto, ApiError> test1 = new TestCase<>(fail1, typeError);
         test1.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(4));
+        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(5));
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("uuid"))
+        ).isTrue());
+        test1.addTest(result -> assertThat(
+                result.getResult().getErrors().stream().anyMatch(error -> error.contains("authId"))
         ).isTrue());
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("company"))

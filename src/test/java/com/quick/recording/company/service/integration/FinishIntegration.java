@@ -49,6 +49,7 @@ public class FinishIntegration {
     private EmployeeService employeeService;
 
     @Test
+    @Order(1)
     void loadContext() {
         assertThat(activityService).isNotNull();
         assertThat(geocoderService).isNotNull();
@@ -60,7 +61,7 @@ public class FinishIntegration {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     void clearDataBase() {
         clearService(geocoderService);
         clearService(employeeService);

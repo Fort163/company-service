@@ -19,9 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-import static com.quick.recording.company.service.ContextConstant.GEOCODER_DTO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Test Api Geocoder in company service")
@@ -50,13 +50,12 @@ public class GeocoderTestController extends MainTestController<GeocoderDto> {
     }
 
     @Override
-    public String contextVariableName() {
-        return GEOCODER_DTO;
-    }
-
-    @Override
     public List<TestCase<GeocoderDto, ?>> postGetTestCases() {
-        CompanyDto companyDto = CompanyServiceAppFactory.createCompany(companyService, getDtoFromService(activityService));
+        CompanyDto companyDto = getDtoFromService(companyService);
+        if(Objects.isNull(companyDto)) {
+            companyDto = CompanyServiceAppFactory
+                    .createCompany(companyService, CompanyServiceAppFactory.createActivity(activityService));
+        }
         GeocoderObjectDto go1 = new GeocoderObjectDto();
         go1.setName("Россия");
         go1.setKind("country");

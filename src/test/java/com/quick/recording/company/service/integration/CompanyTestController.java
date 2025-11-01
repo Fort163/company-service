@@ -2,7 +2,6 @@ package com.quick.recording.company.service.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.quick.recording.company.service.CompanyServiceAppFactory;
-import com.quick.recording.company.service.ContextConstant;
 import com.quick.recording.company.service.service.local.ActivityService;
 import com.quick.recording.company.service.service.local.CompanyService;
 import com.quick.recording.company.service.service.local.ServiceService;
@@ -65,11 +64,6 @@ public class CompanyTestController extends MainTestController<CompanyDto> {
     @Override
     public String uri(){
         return "/api/v1/company";
-    }
-
-    @Override
-    public String contextVariableName() {
-        return ContextConstant.COMPANY_DTO;
     }
 
     @Override

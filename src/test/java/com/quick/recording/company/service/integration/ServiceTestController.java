@@ -2,7 +2,6 @@ package com.quick.recording.company.service.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.quick.recording.company.service.CompanyServiceAppFactory;
-import com.quick.recording.company.service.ContextConstant;
 import com.quick.recording.company.service.service.local.ActivityService;
 import com.quick.recording.company.service.service.local.CompanyService;
 import com.quick.recording.company.service.service.local.ServiceService;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.quick.recording.company.service.ContextConstant.SERVICE_DTO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Test Api Service in company service")
@@ -53,22 +51,11 @@ public class ServiceTestController extends MainTestController<ServiceDto> {
     }
 
     @Override
-    public String contextVariableName() {
-        return SERVICE_DTO;
-    }
-
-    @Override
     public List<TestCase<ServiceDto, ?>> postGetTestCases() {
-        CompanyDto companyDto;
-        if(getTestContextHolder().isSuite()){
-            companyDto = getTestContextHolder().getLast(ContextConstant.COMPANY_DTO);
-        }
-        else {
-            companyDto = getDtoFromService(companyService);
-            if(Objects.isNull(companyDto)) {
-                companyDto = CompanyServiceAppFactory.createCompany(companyService,
-                        CompanyServiceAppFactory.createActivity(activityService));
-            }
+        CompanyDto companyDto = getDtoFromService(companyService);
+        if(Objects.isNull(companyDto)) {
+            companyDto = CompanyServiceAppFactory.createCompany(companyService,
+                    CompanyServiceAppFactory.createActivity(activityService));
         }
 
         ServiceDto fail1 = new ServiceDto();
