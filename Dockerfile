@@ -1,4 +1,4 @@
-FROM openjdk:17-slim as build
+FROM amazoncorretto:17 as build
 
 LABEL maintainer = "Pavel <front-91@mail.ru>"
 
@@ -8,7 +8,7 @@ COPY ${JAR_FILE} app.jar
 
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
 
-FROM openjdk:17-slim
+FROM amazoncorretto:17
 
 VOLUME /tmp
 
