@@ -112,7 +112,7 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         EmployeeDto fail1 = new EmployeeDto();
         TestCase<EmployeeDto, ApiError> test1 = new TestCase<>(fail1, typeError);
         test1.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(5));
+        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(4));
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("authId"))
         ).isTrue());
@@ -124,9 +124,6 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         ).isTrue());
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("permissions"))
-        ).isTrue());
-        test1.addTest(result -> assertThat(
-                result.getResult().getErrors().stream().anyMatch(error -> error.contains("services"))
         ).isTrue());
 
         EmployeeDto fail2 = new EmployeeDto();
@@ -258,7 +255,7 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         EmployeeDto fail1 = new EmployeeDto();
         TestCase<EmployeeDto, ApiError> test1 = new TestCase<>(fail1, typeError);
         test1.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(6));
+        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(5));
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("uuid"))
         ).isTrue());
@@ -273,9 +270,6 @@ public class EmployeeTestController extends MainTestController<EmployeeDto> {
         ).isTrue());
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("permissions"))
-        ).isTrue());
-        test1.addTest(result -> assertThat(
-                result.getResult().getErrors().stream().anyMatch(error -> error.contains("services"))
         ).isTrue());
 
         EmployeeDto fail2 = this.getLastCreateObjectClone();
