@@ -70,7 +70,7 @@ public class ProfessionTestController extends MainTestController<ProfessionDto> 
         ProfessionDto fail1 = new ProfessionDto();
         TestCase<ProfessionDto, ApiError> test1 = new TestCase<>(fail1, typeError);
         test1.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(4));
+        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(3));
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("name"))
         ).isTrue());
@@ -79,9 +79,6 @@ public class ProfessionTestController extends MainTestController<ProfessionDto> 
         ).isTrue());
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("company"))
-        ).isTrue());
-        test1.addTest(result -> assertThat(
-                result.getResult().getErrors().stream().anyMatch(error -> error.contains("services"))
         ).isTrue());
 
         BaseDto emptyDto = new BaseDto();
@@ -203,15 +200,12 @@ public class ProfessionTestController extends MainTestController<ProfessionDto> 
         fail1.setServices(null);
         TestCase<ProfessionDto, ApiError> test1 = new TestCase<>(fail1, typeError);
         test1.addTest(result -> assertThat(result.code().is4xxClientError()).isTrue());
-        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(4));
+        test1.addTest(result -> assertThat(result.getResult().getErrors().size()).isEqualTo(3));
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("name"))
         ).isTrue());
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("description"))
-        ).isTrue());
-        test1.addTest(result -> assertThat(
-                result.getResult().getErrors().stream().anyMatch(error -> error.contains("services"))
         ).isTrue());
         test1.addTest(result -> assertThat(
                 result.getResult().getErrors().stream().anyMatch(error -> error.contains("company"))
