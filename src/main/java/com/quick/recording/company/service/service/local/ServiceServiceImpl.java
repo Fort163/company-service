@@ -39,7 +39,7 @@ public class ServiceServiceImpl
     @Transactional(
             propagation = Propagation.MANDATORY
     )
-    protected void beforePatch(ServiceEntity entity, ServiceDto dto) {
+    protected void beforePatch(ServiceEntity entity, ServiceDto oldDto, ServiceDto dto) {
         dto.setCountPartTime(LocalTimeUtil.getPartTime(dto.getWorkClock()));
     }
 
@@ -47,7 +47,7 @@ public class ServiceServiceImpl
     @Transactional(
             propagation = Propagation.MANDATORY
     )
-    protected void beforePut(ServiceEntity entity, ServiceDto dto) {
+    protected void beforePut(ServiceEntity entity, ServiceDto oldDto, ServiceDto dto) {
         dto.setCountPartTime(LocalTimeUtil.getPartTime(dto.getWorkClock()));
     }
 

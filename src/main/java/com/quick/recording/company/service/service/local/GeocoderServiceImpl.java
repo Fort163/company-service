@@ -5,6 +5,7 @@ import com.quick.recording.company.service.entity.GeocoderObjectEntity;
 import com.quick.recording.company.service.mapper.GeocoderMapper;
 import com.quick.recording.company.service.repository.entity.GeocoderEntityRepository;
 import com.quick.recording.gateway.config.MessageUtil;
+import com.quick.recording.gateway.dto.company.ServiceDto;
 import com.quick.recording.gateway.dto.yandex.GeocoderDto;
 import com.quick.recording.gateway.dto.yandex.GeocoderObjectDto;
 import com.quick.recording.gateway.main.service.local.MainServiceAbstract;
@@ -38,7 +39,7 @@ public class GeocoderServiceImpl
     }
 
     @Override
-    protected void beforePut(GeocoderEntity entity, GeocoderDto dto) {
+    protected void beforePut(GeocoderEntity entity, GeocoderDto oldDto, GeocoderDto dto) {
         List<UUID> idGeoObject = dto.getGeoObjects().stream()
                 .map(GeocoderObjectDto::getUuid)
                 .collect(Collectors.toList());
